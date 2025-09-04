@@ -31,11 +31,6 @@ function App() {
   }
 
 
-  const handleDelete = (id:string) => {
-    console.log(id);
-  }
-
-
   return (
     <Box sx={{bgcolor: '#eeeeee', minHeight:'100vh'}}>
       <CssBaseline />
@@ -50,8 +45,7 @@ function App() {
                            selectedActivity={selectedActivity}
                            editMode={editMode}
                            openForm={handleOpenForm}
-                           closeForm={handleFormClose}
-                           deleteActivity={handleDelete}/>)}
+                           closeForm={handleFormClose}/>)}
       </Container>
     </Box>
   )
