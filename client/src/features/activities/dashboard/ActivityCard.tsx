@@ -1,6 +1,7 @@
 import { AccessTime, Place } from "@mui/icons-material";
 import { Card, CardContent, Typography, Chip, Button, Box, CardHeader, Avatar, Divider } from "@mui/material"
 import { Link } from "react-router";
+import { formatDate } from "../../../lib/util/utils";
 
 type Props = {
     activity: Activity
@@ -42,8 +43,13 @@ export default function ActivityCard({ activity }: Props) {
                 <Divider sx={{ mb: 3 }} />
 
                 <Box display='flex' alignItems='center' mb={2} px={2}>
-                    <AccessTime sx={{ mr: 1 }} />
-                    <Typography variant="body2">{activity.date}</Typography>
+                    <Box display='flex' flexGrow={0} alignItems='center'>
+                        <AccessTime sx={{ mr: 1 }} />
+                        <Typography variant="body2" noWrap>
+                            {formatDate(activity.date)}
+                        </Typography>
+                    </Box>
+
                     <Place sx={{ ml: 3, mr: 1 }} />
                     <Typography variant="body2">{activity.venue}</Typography>
                 </Box>
