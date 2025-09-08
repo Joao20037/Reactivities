@@ -1,5 +1,5 @@
 import { Box, Button, ButtonGroup, List, ListItemText, Paper, Typography } from "@mui/material";
-import { useStore } from "../../lib/types/hooks/useStore"
+import { useStore } from "../../lib/hooks/useStore"
 import { observer } from 'mobx-react-lite';
 
 const Counter = observer(function Counter() {

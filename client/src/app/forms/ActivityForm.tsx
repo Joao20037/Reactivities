@@ -1,9 +1,9 @@
 import { Box, Button, Paper, Typography } from "@mui/material";
-import { useActivities } from "../../../lib/types/hooks/useActivities";
+import { useActivities } from "../../lib/hooks/useActivities";
 import { useNavigate, useParams } from "react-router";
 import { useForm } from "react-hook-form"
 import { useEffect } from "react";
-import { activitySchema, type AcitivitySchema } from "../../../lib/schemas/ActivitySchema";
+import { activitySchema, type AcitivitySchema } from "../../lib/schemas/ActivitySchema";
 import { zodResolver } from '@hookform/resolvers/zod'
 import TextInput from "../shared/components/TextInput";
 import SelectInput from "../shared/components/SelectInput";
