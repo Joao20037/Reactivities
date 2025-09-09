@@ -10,7 +10,6 @@ import ActivityDetailsSidebar from "./ActivityDetailsSidebar";
 export default function ActivityDetailPage() {
     const {id} = useParams();
     const {activity, isLoadingActivity} = useActivities(id);
-    console.log(activity);
 
 
     if (isLoadingActivity) return <Typography>Loading...</Typography>
@@ -25,7 +24,7 @@ export default function ActivityDetailPage() {
             <ActivityDetailsChat />
         </Grid>
         <Grid size={4}>
-            <ActivityDetailsSidebar />
+            <ActivityDetailsSidebar activity={activity}/>
         </Grid>
     </Grid>
   )

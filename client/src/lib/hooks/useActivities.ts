@@ -16,7 +16,16 @@ export const useActivities = (id?: string) => {
           const response = await agent.get<Activity[]>("/activities");
           return response.data;
         },
-        enabled: !id && location.pathname === "/activities" && !!currentUser
+        enabled: !id && location.pathname === "/activities" && !!currentUser,
+        select: data => {
+            return data.map(activity => {
+                return {
+                    ...activity,
+                    isHost: currentUser?.id === activity.hostId,
+                    isGoing: activity.attendees.some(x => x.id === currentUser?.id)
+                }
+            })
+        }
       })
 
     // isLoading and isPending is not that different just exploring different things 
@@ -26,7 +35,14 @@ export const useActivities = (id?: string) => {
             const response = await agent.get<Activity>(`/activities/${id}`);
             return response.data;
         },
-        enabled: !!id  && !!currentUser
+        enabled: !!id  && !!currentUser,
+        select: data => {
+            return {
+                ...data,
+                isHost: currentUser?.id === data.hostId,
+                isGoing: data.attendees.some(x => x.id === currentUser?.id)
+            }
+        }
     })
     
     const updateActivity = useMutation({
@@ -63,6 +79,52 @@ export const useActivities = (id?: string) => {
         }
     })
 
+    const updateAttendance = useMutation({
+        mutationFn: async (id:string) => {
+            await agent.post(`/activities/${id}/attend`)
+        },
+        onMutate: async (activityId: string) => {
+            // cancelling querys to not override the optimistc update
+            await queryClient.cancelQueries({queryKey: ['activities', activityId]});
+
+            const prevAcitivity = queryClient.getQueryData<Activity>(['activities', activityId]);
+
+            // optimistic update
+            queryClient.setQueryData<Activity>(['activities', activityId], oldActivity => {
+                if (!oldActivity || !currentUser) {
+                    return oldActivity;
+                }
+
+                const isHost = oldActivity.hostId === currentUser.id;
+                const isAttending = oldActivity.attendees.some(x => x.id === currentUser.id);
+
+                return {
+                    ...oldActivity,
+                    // this toggle the bool
+                    isCancelled: isHost ? !oldActivity.isCancelled : oldActivity.isCancelled,
+                    // removing the attendee
+                    attendees: isAttending 
+                                ? isHost
+                                    ? oldActivity.attendees
+                                    : oldActivity.attendees.filter(x => x.id !== currentUser.id)
+                                : [...oldActivity.attendees, {
+                                    id: currentUser.id,
+                                    displayName: currentUser.displayName,
+                                    imageUrl: currentUser.imageUrl
+                                }]
+                }
+            });
+            return {prevAcitivity}
+        },
+        onError: (error, activityId, context) => {
+            // rollback of optimistic update
+            console.log(error);
+            if (context?.prevAcitivity){
+                queryClient.setQueryData(['activities', activityId], context.prevAcitivity)
+            }
+        }
+    })
+
     return {
         activities,
         isLoading,
@@ -70,6 +132,7 @@ export const useActivities = (id?: string) => {
         createActivity,
         deleteActivity,
         activity,
-        isLoadingActivity
+        isLoadingActivity,
+        updateAttendance
     }
 }
