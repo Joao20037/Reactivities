@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using Application.Profiles.Commands;
 using Application.Profiles.DTOs;
 using Application.Profiles.Queries;
@@ -5,6 +6,7 @@ using Domain;
 using Infrastructure.Photos;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.Differencing;
 
 namespace API.Controllers;
 
@@ -38,5 +40,12 @@ public class ProfilesController : BaseApiController
     public async Task<ActionResult<UserProfile>> GetProfile(string userId)
     {
         return HandleResult(await Mediator.Send(new GetProfile.Query { UserId = userId }));
+    }
+
+    [HttpPut("{userId}")]
+    public async Task<ActionResult<UserProfile>> UpdateProfile(string userId, EditProfileDto profile)
+    {
+        profile.Id = userId;
+        return HandleResult(await Mediator.Send(new EditProfile.Command { ProfileDto = profile }));
     }
 }
