@@ -19,5 +19,6 @@ public class Activity
 
     // Nav n-n relationship
     public ICollection<AcitivityAttendee> Attendees { get; set; } = [];
+    public ICollection<Comment> Comments { get; set; } = [];
 
 }
