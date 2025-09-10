@@ -5,7 +5,6 @@ import { useMemo } from "react";
 export const useProfile = (id?: string) => {
     const queryClient = useQueryClient();
 
-
     const {data: profile, isLoading: loadingProfile} = useQuery<Profile>({
         queryKey: ['profile', id],
         queryFn: async () => {
@@ -22,6 +21,20 @@ export const useProfile = (id?: string) => {
             return response.data;
         },
         enabled: !!id
+    })
+
+    const editProfile = useMutation({
+        mutationFn: async (profile: Profile) => {
+            await agent.put('/profiles', profile)
+        },
+        onSuccess: async () => {
+            await queryClient.invalidateQueries({
+                queryKey: ["profile"]
+            })
+            await queryClient.invalidateQueries({
+                queryKey: ["user"]
+            })
+        }
     })
 
     const uploadPhoto = useMutation({
@@ -100,7 +113,8 @@ export const useProfile = (id?: string) => {
         isCurrentUser,
         uploadPhoto,
         setMainPhoto,
-        deletePhoto
+        deletePhoto,
+        editProfile
     }
 };
 

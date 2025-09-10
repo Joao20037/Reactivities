@@ -12,6 +12,6 @@ export const activitySchema = z.object({
         latitude: z.coerce.number(),
         longitude: z.coerce.number()
     })
-})
+});
 
 export type AcitivitySchema = z.infer<typeof activitySchema>;

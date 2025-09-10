@@ -8,7 +8,7 @@ type Props = {
 
 export default function ProfileCard({ profile }: Props) {
     const following = false;
-    console.log(profile.imageUrl)
+    // console.log(profile.imageUrl)
     return (
         <Link to={`/profiles/${profile.id}`} style={{ textDecoration: 'none' }}>
             <Card sx={{ borderRadius: 3, p: 3, maxWidth: 300, textDecoration: 'none' }} elevation={4}>

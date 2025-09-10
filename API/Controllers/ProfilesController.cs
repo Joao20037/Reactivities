@@ -42,10 +42,9 @@ public class ProfilesController : BaseApiController
         return HandleResult(await Mediator.Send(new GetProfile.Query { UserId = userId }));
     }
 
-    [HttpPut("{userId}")]
-    public async Task<ActionResult<UserProfile>> UpdateProfile(string userId, EditProfileDto profile)
+    [HttpPut]
+    public async Task<ActionResult<UserProfile>> UpdateProfile(EditProfileDto profile)
     {
-        profile.Id = userId;
         return HandleResult(await Mediator.Send(new EditProfile.Command { ProfileDto = profile }));
     }
 }
