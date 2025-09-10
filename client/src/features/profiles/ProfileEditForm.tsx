@@ -47,7 +47,7 @@ export default function ProfileEditForm({ onSuccess }: Props) {
                 <Button type='submit'
                         color='success'
                         variant="contained"
-                        disabled={!formState.isValid || editProfile.isPending}>
+                        disabled={!formState.isValid || !formState.isDirty || editProfile.isPending}>
                             UPDATE PROFILE
                 </Button>
             </Box>
