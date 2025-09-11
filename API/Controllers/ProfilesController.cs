@@ -65,4 +65,7 @@ public class ProfilesController : BaseApiController
     {
         return HandleResult(await Mediator.Send(new GetUserActivities.Query { UserId = userId, Params = Params }));
     }
+
+    // Could use like that both works
+    // public async Task<ActionResult> GetUserActivities(string userId, string filter)
 }
