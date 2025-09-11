@@ -34,6 +34,7 @@ public class MappingProfiles : Profile
             .ForMember(d => d.Following, o => o.MapFrom(s => s.Followers.Any(x => x.Observer.Id == currentUserId)));
         CreateMap<EditProfileDto, User>()
             .ForMember(x => x.Id, o => o.Ignore());
+        CreateMap<Activity, UserActivityDto>();
         CreateMap<Comment, CommentDto>()
             .ForMember(d => d.DisplayName, o => o.MapFrom(s => s.User.DisplayName))
             .ForMember(d => d.UserId, o => o.MapFrom(s => s.User.Id))
