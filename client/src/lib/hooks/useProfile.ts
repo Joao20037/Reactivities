@@ -1,9 +1,10 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import agent from "../api/agents"
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 
 export const useProfile = (id?: string, predicate?: string) => {
     const queryClient = useQueryClient();
+    const [filter, setFilter] = useState<string | null>(null);
 
     const {data: profile, isLoading: loadingProfile} = useQuery<Profile>({
         queryKey: ['profile', id],
@@ -31,6 +32,15 @@ export const useProfile = (id?: string, predicate?: string) => {
         },
         enabled: !!id && !!predicate
     }) 
+
+    const {data: userActivities, isLoading: loadingUserActivities} = useQuery<UserActivity[]>({
+        queryKey: ['userActivity', id, filter],
+        queryFn:  async () => {
+            const response = await agent.get<UserActivity[]>(`/profiles/${id}/activities?filter=${filter}`);
+            return response.data;
+        },
+        enabled: !!filter
+    })
 
     const editProfile = useMutation({
         mutationFn: async (profile: Profile) => {
@@ -146,7 +156,10 @@ export const useProfile = (id?: string, predicate?: string) => {
         editProfile,
         updateFollowing,
         followings, 
-        loadingFollowings
+        loadingFollowings,
+        userActivities,
+        loadingUserActivities,
+        setFilter
     }
 };
 

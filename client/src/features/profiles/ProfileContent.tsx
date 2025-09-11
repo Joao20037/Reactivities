@@ -3,6 +3,7 @@ import { useState, type SyntheticEvent } from "react";
 import ProfilePhotos from "./ProfilePhotos";
 import ProfileAbout from "./ProfileAbout";
 import ProfileFollowings from "./ProfileFollowings";
+import ProfileActivities from "./ProfileActivities";
 
 export default function ProfileContent() {
   const [value, setValue] = useState(0);
@@ -14,7 +15,7 @@ export default function ProfileContent() {
   const tabContent = [
     { label: 'About', content: <ProfileAbout /> },
     { label: 'Photos', content: <ProfilePhotos /> },
-    { label: 'Events', content: <div>Events</div> },
+    { label: 'Events', content: <ProfileActivities /> },
     { label: 'Followers', content: <ProfileFollowings activeTab={value} /> },
     { label: 'Following', content: <ProfileFollowings activeTab={value} /> },
 
@@ -38,7 +39,9 @@ export default function ProfileContent() {
           <Tab key={index} label={tab.label} sx={{mr: 3}}/>
         ))}
       </Tabs>
-      <Box sx={{flexGrow: 1, p: 3, pt: 0}}>
+      <Box sx={{flexGrow: 1, p: 3, pt: 0,
+          overflowY: 'auto',        // Makes the content scrollable
+          maxHeight: '100%'}} >
         {tabContent[value].content}
       </Box>
     </Box>
