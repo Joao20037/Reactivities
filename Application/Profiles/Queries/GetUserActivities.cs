@@ -31,9 +31,9 @@ public class GetUserActivities
                 query = request.Params.Filter switch
                 {
                     "hosting" => query.Where(x => x.Attendees.Any(a => a.IsHost && a.UserId == request.UserId)),
-                    "past" => query.Where(x => x.Date <= DateTime.UtcNow),
-                    "future" => query.Where(x => x.Date >= DateTime.UtcNow),
-                    _ => query
+                    "past" => query.Where(x => x.Date <= DateTime.UtcNow && x.Attendees.Any(a => a.UserId == request.UserId)),
+                    "future" => query.Where(x => x.Date >= DateTime.UtcNow && x.Attendees.Any(a => a.UserId == request.UserId)),
+                    _ => query.Where(x => x.Attendees.Any(a => a.UserId == request.UserId))
                 };
             }
 
