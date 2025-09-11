@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
 import { useController, type FieldValues, type UseControllerProps } from "react-hook-form"
-import { type LocationIQSuggestion } from "../../../lib/types";
 import { Box, debounce, List, ListItemButton, TextField, Typography } from "@mui/material";
 import axios from "axios";
 
@@ -56,7 +55,7 @@ export default function LocationInput<T extends FieldValues>(props: Props<T>) {
     };
 
     const handleSelect = (location: LocationIQSuggestion) => {
-        const city = location.address?.city || location.address?.town || location.address?.village;
+        const city = location.address?.city || location.address?.town || location.address?.village || "no city found";
         const venue = location.display_name;
         const latitude = location.lat;
         const longitude = location.lon;

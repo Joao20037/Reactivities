@@ -1,7 +1,7 @@
 import { Box, Button, Paper, Typography } from "@mui/material";
 import { useActivities } from "../../lib/hooks/useActivities";
 import { useNavigate, useParams } from "react-router";
-import { useForm } from "react-hook-form"
+import { useForm, type Resolver } from "react-hook-form"
 import { useEffect } from "react";
 import { activitySchema, type AcitivitySchema } from "../../lib/schemas/ActivitySchema";
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -14,7 +14,7 @@ import LocationInput from "../shared/components/Location";
 export default function ActivityForm() {
     const { reset, control, handleSubmit } = useForm<AcitivitySchema>({
         mode: 'onTouched',
-        resolver: zodResolver(activitySchema),
+        resolver: zodResolver(activitySchema)  as Resolver<AcitivitySchema>,
         // for some reason i need to do that, in the udemy course he didn't do and works, in my case is making 
         // the defaultValues be undefined that brakes the verification of strings
         defaultValues: {
@@ -78,7 +78,7 @@ export default function ActivityForm() {
                 <LocationInput control={control} label="Enter the location" name="location" />
 
                 <Box display='flex' justifyContent="end" gap={3}>
-                    <Button color="inherit">Cancel</Button>
+                    <Button onClick={() => navigate(-1)}color="inherit">Cancel</Button>
                     <Button type="submit"
                         color="success"
                         variant="contained"

@@ -3,6 +3,7 @@ import agent from "../api/agents";
 import { useLocation } from "react-router";
 import { useAccount } from "./useAccount";
 import { useStore } from "./useStore";
+import type { FieldValues } from "react-hook-form";
 
 
 
@@ -26,7 +27,6 @@ export const useActivities = (id?: string) => {
             });
             return response.data;
         },
-        staleTime: 1000 * 60 * 5,
         placeholderData: keepPreviousData,
         initialPageParam: null,
         getNextPageParam: (LastPage) => LastPage.nextCursor,
@@ -79,7 +79,7 @@ export const useActivities = (id?: string) => {
     })
 
     const createActivity = useMutation({
-        mutationFn: async (activity: Activity) => {
+        mutationFn: async (activity: FieldValues) => {
             const response = await agent.post('/activities', activity)
             return response.data;
         },

@@ -2,7 +2,6 @@ using System;
 using Domain;
 using AutoMapper;
 using Application.Activities.DTOs;
-using Persistence.Migrations;
 using Application.Profiles.DTOs;
 
 namespace Application.Core;
