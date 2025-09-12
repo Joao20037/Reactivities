@@ -18,7 +18,7 @@ jobs:
 
     - name: 🚀 Trigger Render Deployment
       run: |
-        curl -X POST RENDER_DEPLOY_HOOK_URL
+        curl -X POST "$RENDER_DEPLOY_HOOK_URL"
     
     - name: Waiting for Deployment Status
       uses: JorgeLNJunior/render-deploy@v1.4.5
