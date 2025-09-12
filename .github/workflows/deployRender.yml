@@ -18,4 +18,4 @@ jobs:
 
     - name: 🚀 Trigger Render Deployment
       run: |
-        curl -X POST RENDER_DEPLOY_HOOK_URL
+        curl -X POST "$RENDER_DEPLOY_HOOK_URL"
