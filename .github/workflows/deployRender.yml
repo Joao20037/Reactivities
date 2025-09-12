@@ -1,21 +1,57 @@
-name: 🚀 Deploy to Render
-env:
-  RENDER_DEPLOY_HOOK_URL: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+name: 🚀 Deploy to Render (Checked)
 
 on:
   push:
     branches:
-      - main  # Change this if you use a different branch
+      - main
+
+env:
+  SERVICE_ID: your_render_service_id
+  RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
 
 jobs:
   deploy:
-    name: 🎯 Deploy to Render
     runs-on: ubuntu-latest
 
     steps:
-    - name: 📥 Checkout code
-      uses: actions/checkout@v3
+      - name: 📥 Checkout code
+        uses: actions/checkout@v3
 
-    - name: 🚀 Trigger Render Deployment
-      run: |
-        curl -X POST "$RENDER_DEPLOY_HOOK_URL"
+      - name: 🚀 Trigger Deploy
+        id: trigger
+        run: |
+          RESPONSE=$(curl -s -X POST \
+            -H "Authorization: Bearer $RENDER_API_KEY" \
+            -H "Accept: application/json" \
+            https://api.render.com/v1/services/$SERVICE_ID/deploys)
+
+          echo "Deploy response: $RESPONSE"
+
+          DEPLOY_ID=$(echo "$RESPONSE" | jq -r '.id')
+
+          echo "deploy_id=$DEPLOY_ID" >> $GITHUB_OUTPUT
+
+      - name: ⏳ Wait for Deployment
+        run: |
+          echo "Waiting for deployment to complete..."
+          STATUS="in_progress"
+
+          for i in {1..60}; do
+            RESPONSE=$(curl -s -H "Authorization: Bearer $RENDER_API_KEY" https://api.render.com/v1/deploys/${{ steps.trigger.outputs.deploy_id }})
+            STATUS=$(echo "$RESPONSE" | jq -r '.status')
+
+            echo "Current status: $STATUS"
+
+            if [[ "$STATUS" == "live" ]]; then
+              echo "✅ Deployment succeeded!"
+              exit 0
+            elif [[ "$STATUS" == "failed" ]]; then
+              echo "❌ Deployment failed."
+              exit 1
+            fi
+
+            sleep 10
+          done
+
+          echo "❌ Deployment timed out."
+          exit 1
