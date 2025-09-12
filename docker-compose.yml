@@ -1,4 +1,13 @@
 services:
+  web:
+    build: .
+    ports:
+      - "5000:5000"
+    depends_on:
+      - sql
+    environment:
+      - ConnectionStrings__DefaultConnection=Server=sql,1433;Database=Reactivities;User Id=sa;Password=Password@1;TrustServerCertificate=true
+
   sql:
     image: mcr.microsoft.com/mssql/server:2022-latest
     environment:
